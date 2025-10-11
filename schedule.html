@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🗺️ 당일 코스</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+  .section h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f766c;
+    margin-bottom: 10px;
+  }
+  .section h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #0f766c;
+    margin: 20px 0 10px;
+  }
+  .schedule-group {
+    background: #fff;
+    border: 1px solid #e6efee;
+    border-radius: 14px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+  }
+  .schedule-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px dotted #e6efee;
+  }
+  .schedule-item:last-child {
+    border-bottom: none;
+  }
+  .time-badge {
+    background: #ecfbf8;
+    color: #0f766c;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 999px;
+    padding: 4px 10px;
+    margin-right: 8px;
+    white-space: nowrap;
+  }
+  .activity {
+    flex: 1;
+    font-weight: 600;
+  }
+  .place {
+    color: #6b7280;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand"><div class="title">🗺️ 일정</div></div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="section">
+    <h2>당일 코스</h2>
+    <div id="scheduleWrap"></div>
+  </section>
+</main>
+
+<nav class="navbar"><div class="navbar-inner">
+  <a href="index.html">홈</a>
+  <a href="schedule.html" class="active">일정</a>
+  <a href="visits.html">방문지</a>
+  <a href="survey.html">설문</a>
+  <a href="admin.html">관리자</a>
+</div></nav>
+
+<script type="module">
+import { supabase } from './assets/js/supabase.js';
+import { bucketLabel } from './assets/js/ui.js';
+
+async function loadSchedule(){
+  const wrap = document.querySelector('#scheduleWrap');
+  wrap.innerHTML = '';
+
+  const { data } = await supabase.from('schedules').select('*');
+  if(!data || !data.length){
+    wrap.innerHTML = '<div class="small">등록된 일정이 없습니다.</div>';
+    return;
+  }
+
+  // 시간 순 정렬
+  const sorted = data.slice().sort((a,b)=>{
+    const ta = a.start_time || a.time || '';
+    const tb = b.start_time || b.time || '';
+    return ta.localeCompare(tb);
+  });
+
+  // 시간대별 그룹 (이른 아침, 오전, 오후, 저녁)
+  const by = {};
+  sorted.forEach(r=>{
+    const label = bucketLabel(r.start_time || r.time);
+    (by[label] = by[label] || []).push(r);
+  });
+
+  // 그룹별 렌더링
+  Object.keys(by).forEach(k=>{
+    let html = `<h3>${k}</h3><div class="schedule-group">`;
+    by[k].forEach(r=>{
+      const time = r.start_time || r.time || '--:--';
+      const end = r.end_time ? ` ~ ${r.end_time}` : '';
+      const activity = r.activity || '';
+      const place = r.place ? `(${r.place})` : '';
+      html += `
+        <div class="schedule-item">
+          <span class="time-badge">${time}${end}</span>
+          <span class="activity">${activity}</span>
+          <span class="place">${place}</span>
+        </div>
+      `;
+    });
+    html += '</div>';
+    wrap.insertAdjacentHTML('beforeend', html);
+  });
+}
+
+loadSchedule();
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!doctype html><html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>방문지</title>
+<link rel="stylesheet" href="assets/css/style.css"></head><body>
+<header class="header"><div class="header-inner"><div class="brand"><div class="title">방문지</div></div></div></header>
+<main class="container">
+  <section class="section"><div class="grid" id="grid"></div></section>
+</main>
+<nav class="navbar"><div class="navbar-inner">
+  <a href="index.html">홈</a><a href="schedule.html">일정</a><a href="visits.html">방문지</a><a href="survey.html">설문</a><a href="admin.html">관리자</a>
+</div></nav>
+<script type="module">
+import { supabase } from './assets/js/supabase.js';
+import { qs } from './assets/js/ui.js';
+
+async function coverFor(visitId){
+  const q = await supabase.from('visit_images').select('url,path').eq('visit_id', visitId).order('created_at',{ascending:true}).limit(1);
+  if(q.data && q.data.length){
+    const im=q.data[0];
+    return im.url || (await supabase.storage.from('images').getPublicUrl(im.path).data.publicUrl);
+  }
+  return 'assets/images/cover.svg';
+}
+
+async function load(){
+  const { data } = await supabase.from('visits').select('*').order('created_at',{ascending:false});
+  const wrap = qs('#grid'); wrap.innerHTML='';
+  for(const v of (data||[])){
+    const img = await coverFor(v.id);
+    const card = document.createElement('a'); card.className='card'; card.href = 'visit.html?id=' + encodeURIComponent(v.id);
+    card.innerHTML = `<img class="thumb" src="${img}" alt=""><div class="title-ellip" style="font-weight:700;margin-top:6px">${v.title||''}</div><div class="small title-ellip">${v.summary||''}</div>`;
+    wrap.appendChild(card);
+  }
+  if(!wrap.children.length){
+    wrap.innerHTML = '<div class="card small">방문지가 없습니다.</div>';
+  }
+}
+load();
+</script>
+</body></html>

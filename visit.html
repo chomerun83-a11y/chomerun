@@ -1,0 +1,46 @@
+<!doctype html><html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>방문지 상세</title>
+<link rel="stylesheet" href="assets/css/style.css"></head><body>
+<header class="header"><div class="header-inner"><div class="brand"><div class="title">방문지 상세</div></div></div></header>
+<main class="container">
+  <section class="section card">
+    <div id="titleBox"></div>
+    <div id="slideBox" class="section"></div>
+    <div id="bodyBox" class="section small"></div>
+    <div id="mapBtns" class="action-row"></div>
+  </section>
+</main>
+<nav class="navbar"><div class="navbar-inner">
+  <a href="index.html">홈</a><a href="schedule.html">일정</a><a href="visits.html">방문지</a><a href="survey.html">설문</a><a href="admin.html">관리자</a>
+</div></nav>
+<script type="module">
+import { supabase } from './assets/js/supabase.js';
+import { qs, qsa, mapLinks } from './assets/js/ui.js';
+function getParam(name){ const u=new URL(location.href); return u.searchParams.get(name); }
+
+async function load(){
+  const id = getParam('id'); if(!id){ qs('#titleBox').textContent='잘못된 접근'; return; }
+  const vres = await supabase.from('visits').select('*').eq('id', id).maybeSingle();
+  const v = vres.data; if(!v){ qs('#titleBox').textContent='방문지 없음'; return; }
+  qs('#titleBox').innerHTML = `<h2 style="margin:0">${v.title||''}</h2><div class="small">${v.summary||''}</div>`;
+  const { data: imgs } = await supabase.from('visit_images').select('*').eq('visit_id', id).order('created_at',{ascending:true});
+  const s = imgs||[];
+  const slide = qs('#slideBox');
+  if(!s.length){ slide.innerHTML = '<div class="small">이미지가 없습니다.</div>'; }
+  else{
+    slide.innerHTML = '<div class="hero-fixed" id="carousel"></div>'; const car=qs('#carousel');
+    car.innerHTML = s.map(im=>`<div class="slide"><img src="${im.url || (supabase.storage.from('images').getPublicUrl(im.path).data.publicUrl)}" alt=""></div>`).join('');
+    const items = qsa('.slide', car); let i=0; items.forEach((el,idx)=>el.style.display=idx?'none':'block');
+    setInterval(()=>{ items[i].style.display='none'; i=(i+1)%items.length; items[i].style.display='block'; },2600);
+  }
+  qs('#bodyBox').innerHTML = v.body || '';
+  const query = v.map_query || v.title || '';
+  const urls = mapLinks(query);
+  qs('#mapBtns').innerHTML = `<a class="btn secondary" target="_blank" href="${urls.g}">G</a>
+                               <a class="btn secondary" target="_blank" href="${urls.n}">N</a>
+                               <a class="btn secondary" target="_blank" href="${urls.k}">K</a>`;
+}
+load();
+</script>
+</body></html>

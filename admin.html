@@ -1,0 +1,440 @@
+<!doctype html><html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>관리자</title>
+<link rel="stylesheet" href="assets/css/style.css"></head><body>
+<header class="header"><div class="header-inner"><div class="brand"><div class="title">🛠️ 관리자</div></div></div></header>
+<main class="container">
+  <section id="loginView" class="section login-card card">
+    <h2 style="margin:0 0 6px 0;">관리자 로그인</h2>
+    <form id="loginForm" class="action-row" autocomplete="on">
+      <input id="email" class="input" placeholder="이메일" autocomplete="username" required>
+      <input id="pw" class="input" type="password" placeholder="비밀번호" autocomplete="current-password" required>
+      <button class="btn" type="submit">로그인</button>
+    </form>
+    <div class="small">* 로그인 후에만 관리 기능이 보입니다.</div>
+    <div id="loginError" class="small" style="color:#b42318"></div>
+  </section>
+
+  <section id="adminApp" class="section" style="display:none;">
+    <div class="admin-wrap">
+      <aside class="sidebar">
+        <a href="#" class="side-item" data-to="home">🏠 홈/슬라이드</a>
+        <a href="#" class="side-item" data-to="ann">📌 공지사항</a>
+        <a href="#" class="side-item" data-to="sched">🗺️ 일정</a>
+        <a href="#" class="side-item" data-to="visit">📍 방문지</a>
+        <a href="#" class="side-item" data-to="meeting">📍 집합 장소</a> <!-- ✅ 추가 -->
+        <a href="#" class="side-item" data-to="poll">🗳️ 설문</a>
+        <hr style="border:none;border-top:1px solid var(--line);margin:8px 0">
+        <button class="btn secondary" id="btnLogout">로그아웃</button>
+      </aside>
+      <div class="admin-panel">
+
+        <!-- ✅ 집합 장소 관리 -->
+<div class="card" data-id="meeting" style="display:none">
+  <h3>집합 장소</h3>
+  <div class="action-row">
+    <input id="mtAddress" class="input" placeholder="주소 또는 장소명">
+    <select id="mtProvider" class="input">
+      <option value="google">Google 지도</option>
+      <option value="naver">Naver 지도</option>
+      <option value="kakao">Kakao 지도</option>
+    </select>
+  </div>
+  <div class="action-row">
+    <input id="mtQuery" class="input" placeholder="지도 검색어 (예: 경기 광주시 도척면)">
+  </div>
+  <div class="action-row">
+    <input id="mtEmbed" class="input" placeholder="임베드 URL (선택)">
+  </div>
+  <div class="action-row">
+    <button class="btn" id="btnSaveMeeting">저장</button>
+  </div>
+</div>
+
+
+        <div class="card" data-id="home">
+          <h3>홈 슬라이드</h3>
+          <div class="action-row"><input id="hsCap" class="input" placeholder="캡션(선택)"><input id="hsFile" type="file" accept="image/*" class="input" multiple><button class="btn" id="btnUploadHS">업로드</button></div>
+          <div id="hsList" class="list"></div>
+        </div>
+
+        <div class="card" data-id="ann" style="display:none">
+          <h3>공지사항</h3>
+          <div class="action-row"><button class="btn" id="btnAddNotice">+ 공지 추가</button></div>
+          <table class="table"><thead><tr><th>제목</th><th>날짜</th><th>내용</th><th></th></tr></thead><tbody id="annBody"></tbody></table>
+          <div class="action-row"><button class="btn" id="btnSaveAnn">저장</button></div>
+        </div>
+
+        <div class="card" data-id="sched" style="display:none">
+          <h3>일정</h3>
+          <div class="action-row"><input id="scTitle" class="input" placeholder="메인 제목(예: 당일 코스)"><input id="scDate" class="input" placeholder="일자(YYYY-MM-DD)"><input id="scDayStart" class="input" placeholder="시작(HH:MM)"><input id="scDayEnd" class="input" placeholder="종료(HH:MM)"><button class="btn secondary" id="btnSaveScMeta">메타 저장</button></div>
+          <div class="action-row"><button class="btn" id="btnAddItem">+ 항목 추가</button></div>
+          <table class="table"><thead><tr><th>시작</th><th>종료</th><th>활동</th><th>장소</th><th></th></tr></thead><tbody id="scTbody"></tbody></table>
+          <div class="action-row"><button class="btn" id="btnSaveItems">저장</button></div>
+        </div>
+
+        <div class="card" data-id="visit" style="display:none">
+          <h3>방문지</h3>
+          <div class="action-row"><button class="btn" id="btnNewVisit">+ 방문지 추가</button></div>
+          <div id="visitList" class="list"></div>
+        </div>
+
+        <div class="card" data-id="poll" style="display:none">
+          <h3>설문</h3>
+          <div class="action-row"><input id="plQuestion" class="input" placeholder="질문"><select id="plMultiple" class="input"><option value="false">단일선택</option><option value="true">복수선택</option></select><input id="plDeadline" class="input" placeholder="마감일(YYYY-MM-DD)"><input id="plOpts" class="input" placeholder="옵션들(쉼표구분)"><button class="btn" id="btnAddPoll">설문 생성</button></div>
+          <div id="pollList" class="list"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+<nav class="navbar"><div class="navbar-inner">
+  <a href="index.html">홈</a><a href="schedule.html">일정</a><a href="visits.html">방문지</a><a href="survey.html">설문</a><a href="admin.html">관리자</a>
+</div></nav>
+
+<script type="module">
+import { supabase } from './assets/js/supabase.js';
+import { qs, qsa, safeFileName } from './assets/js/ui.js';
+
+function navTo(id){ qsa('.side-item').forEach(a=>a.classList.toggle('active', a.getAttribute('data-to')===id)); qsa('[data-id]').forEach(p=>p.style.display=(p.getAttribute('data-id')===id?'block':'none')); }
+async function isAdmin(){
+  const { data:{ user } } = await supabase.auth.getUser();
+  if(!user) return false;
+  const prof = await supabase.from('profiles').select('is_admin').eq('id', user.id).maybeSingle();
+  return !!(prof.data && prof.data.is_admin);
+}
+// --- 집합 장소 관리 ---
+async function loadMeeting(){
+  const res = await supabase.from('settings').select('value').eq('key','meeting').maybeSingle();
+  const val = res.data?.value || null;
+  qs('#mtAddress').value = val?.address || '';
+  qs('#mtProvider').value = val?.provider || 'google';
+  qs('#mtQuery').value = val?.query || '';
+  qs('#mtEmbed').value = val?.embed_url || '';
+}
+
+qs('#btnSaveMeeting').addEventListener('click', async ()=>{
+  const value = {
+    address: qs('#mtAddress').value.trim(),
+    provider: qs('#mtProvider').value,
+    query: qs('#mtQuery').value.trim(),
+    embed_url: qs('#mtEmbed').value.trim()
+  };
+  const { error } = await supabase.from('settings').upsert({ key: 'meeting', value });
+  if(error) return alert('저장 실패: ' + error.message);
+  alert('저장되었습니다.');
+});
+
+async function refreshUI(){
+  const ok = await isAdmin();
+  qs('#loginView').style.display = ok? 'none':'block';
+  qs('#adminApp').style.display  = ok? 'block':'none';
+  if(ok){ navTo('home'); loadHome(); loadAnn(); loadSched(); loadVisits(); loadPolls(); loadMeeting(); }
+}
+
+qs('#loginForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  qs('#loginError').textContent = '';
+  const email=qs('#email').value.trim(), pw=qs('#pw').value;
+  const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
+  if(error){ console.error(error); qs('#loginError').textContent = error.message || '로그인 실패'; return; }
+  await refreshUI();
+});
+qs('#btnLogout').addEventListener('click', async ()=>{ await supabase.auth.signOut(); location.reload(); });
+qsa('.side-item').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); navTo(a.getAttribute('data-to')); }));
+
+// --- 홈 슬라이드 ---
+async function loadHome(){
+  const { data } = await supabase.from('home_slides').select('*').order('sort',{ascending:true}).order('created_at',{ascending:false});
+  const list=qs('#hsList'); list.innerHTML='';
+  (data||[]).forEach(s=>{
+    const row=document.createElement('div'); row.className='card';
+    row.innerHTML = `<div class='action-row'><input class='input cap' data-id='${s.id}' value='${s.caption||''}'><input class='input' value='${s.path||''}' disabled><button class='btn secondary' data-save='${s.id}'>수정</button><button class='btn danger' data-del='${s.id}'>삭제</button></div>`;
+    list.appendChild(row);
+  });
+  list.onclick = async (e)=>{
+    const del=e.target.closest('[data-del]'), save=e.target.closest('[data-save]');
+    if(save){ const id=save.getAttribute('data-save'); const cap=list.querySelector(`input.cap[data-id="${id}"]`).value; await supabase.from('home_slides').update({ caption: cap }).eq('id', id); alert('수정되었습니다.'); }
+    if(del){ const id=del.getAttribute('data-del'); if(confirm('삭제?')){ await supabase.from('home_slides').delete().eq('id', id); loadHome(); } }
+  };
+}
+qs('#btnUploadHS').addEventListener('click', async ()=>{
+  const files=Array.from(qs('#hsFile').files||[]); if(!files.length) return alert('파일을 선택하세요');
+  for(const f of files){
+    const safe=safeFileName(f.name); const name=Date.now()+'_'+safe; const path='slides/'+name;
+    const up=await supabase.storage.from('images').upload(path, f);
+    if(up.error) return alert('업로드 실패: '+up.error.message);
+    const pub = supabase.storage.from('images').getPublicUrl(path).data.publicUrl;
+    await supabase.from('home_slides').insert({ url: pub, path, caption: qs('#hsCap').value.trim() });
+  }
+  qs('#hsFile').value=''; qs('#hsCap').value=''; loadHome();
+});
+
+// --- 공지 ---
+async function loadAnn(){
+  const { data } = await supabase.from('notices').select('*').order('created_at',{ascending:false});
+  const tb=qs('#annBody'); tb.innerHTML='';
+  (data||[]).forEach(n=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td><input class='input a-title' data-id='${n.id}' value='${n.title||''}'></td><td><input class='input a-date' data-id='${n.id}' value='${(n.created_at||'').slice(0,10)}'></td><td><input class='input a-body' data-id='${n.id}' value='${n.body||''}'></td><td><button class='btn danger' data-del='${n.id}'>X</button></td>`; tb.appendChild(tr); });
+  qs('#btnAddNotice').onclick = ()=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td><input class='input a-title'></td><td><input class='input a-date' placeholder='YYYY-MM-DD'></td><td><input class='input a-body'></td><td><button class='btn danger' data-del=''>X</button></td>`; tb.prepend(tr); };
+  qs('#btnSaveAnn').onclick = async ()=>{
+    const newRows = qsa('tr', tb).filter(tr=>!tr.querySelector('.a-title').dataset.id);
+    for(const tr of newRows){
+      const t=tr.querySelector('.a-title').value.trim();
+      const d=tr.querySelector('.a-date').value.trim();
+      const b=tr.querySelector('.a-body').value.trim();
+      await supabase.from('notices').insert({ title:t, body:b, created_at: d? new Date(d).toISOString(): undefined });
+    }
+    const rows = qsa('tr', tb).filter(tr=>tr.querySelector('.a-title').dataset.id);
+    for(const tr of rows){
+      const id=tr.querySelector('.a-title').dataset.id;
+      const t=tr.querySelector('.a-title').value.trim();
+      const d=tr.querySelector('.a-date').value.trim();
+      const b=tr.querySelector('.a-body').value.trim();
+      await supabase.from('notices').update({ title:t, body:b, created_at: d? new Date(d).toISOString(): undefined }).eq('id', id);
+    }
+    alert('저장되었습니다.'); loadAnn();
+  };
+  tb.onclick = async (e)=>{ const x=e.target.closest('[data-del]'); if(!x)return; const id=x.getAttribute('data-del'); if(id){ await supabase.from('notices').delete().eq('id', id); x.closest('tr').remove(); } else x.closest('tr').remove(); };
+}
+
+// --- 일정 ---
+function trItem(it){ return `<tr data-id='${it.id||""}'><td><input class='input st' placeholder='HH:MM' value='${it.start_time||it.time||""}'></td><td><input class='input et' placeholder='HH:MM' value='${it.end_time||""}'></td><td><input class='input act' value='${it.activity||""}'></td><td><input class='input plc' value='${it.place||""}'></td><td><button class='btn danger' data-del='row'>X</button></td></tr>`; }
+async function loadSched(){
+  const meta = await supabase.from('settings').select('value').eq('key','schedule_day').maybeSingle(); const mv=meta.data?.value||{};
+  qs('#scTitle').value=mv.title||''; qs('#scDate').value=mv.date||''; qs('#scDayStart').value=mv.day_start||''; qs('#scDayEnd').value=mv.day_end||'';
+  const { data } = await supabase.from('schedules').select('*');
+  const rows=(data||[]).slice().sort((x,y)=>((x.start_time||x.time||'').localeCompare(y.start_time||y.time||'')));
+  const tb=qs('#scTbody'); tb.innerHTML = rows.map(trItem).join('');
+}
+qs('#btnSaveScMeta').addEventListener('click', async ()=>{
+  const value = { title:qs('#scTitle').value.trim(), date:qs('#scDate').value.trim(), day_start:qs('#scDayStart').value.trim(), day_end:qs('#scDayEnd').value.trim() };
+  await supabase.from('settings').upsert({ key:'schedule_day', value });
+  alert('메타 저장'); 
+});
+qs('#btnAddItem').addEventListener('click', ()=>{ qs('#scTbody').insertAdjacentHTML('afterbegin', trItem({})); });
+qs('#scTbody').addEventListener('click', async (e)=>{
+  const del=e.target.closest('[data-del="row"]'); if(!del) return;
+  const tr = del.closest('tr'); const id=tr.getAttribute('data-id'); if(id) await supabase.from('schedules').delete().eq('id', id); tr.remove();
+});
+qs('#btnSaveItems').addEventListener('click', async ()=>{
+  const rows = qsa('#scTbody tr');
+  for(const tr of rows){
+    const id=tr.getAttribute('data-id'); const st=tr.querySelector('.st').value.trim(); const et=tr.querySelector('.et').value.trim(); const act=tr.querySelector('.act').value.trim(); const plc=tr.querySelector('.plc').value.trim();
+    const payload = { start_time:st, end_time:et, activity:act, place:plc, time:st };
+    if(id) await supabase.from('schedules').update(payload).eq('id', id);
+    else await supabase.from('schedules').insert(payload);
+  }
+  alert('저장되었습니다.'); loadSched();
+});
+
+// --- 방문지 ---
+function visitCard(v, imgs){
+  const listImgs = (imgs||[]).map(im=>`<div class='card'><img class='thumb' src='${im.url || (supabase.storage.from("images").getPublicUrl(im.path).data.publicUrl)}'><div class='action-row'><button class='btn danger' data-imgdel='${im.id}' data-visit='${v.id}'>삭제</button></div></div>`).join('');
+  return `<div class='card' data-vid='${v.id}'>
+    <div class='action-row'><input class='input v-title' value='${v.title||""}'><input class='input v-sum' value='${v.summary||""}'></div>
+    <textarea class='input v-body'>${v.body||""}</textarea>
+    <input class='input v-q' value='${v.map_query||""}' placeholder='지도 검색어'>
+    <div class='action-row'><button class='btn secondary' data-save='${v.id}'>수정</button><button class='btn danger' data-del='${v.id}'>방문지 삭제</button></div>
+    <div class='action-row'><input type='file' accept='image/*' data-f='${v.id}'><button class='btn secondary' data-up='${v.id}'>이미지 업로드</button><a class='btn' href='visit.html?id=${encodeURIComponent(v.id)}' target='_blank'>상세 미리보기</a></div>
+    <div class='grid'>${listImgs}</div>
+  </div>`;
+}
+async function loadVisits(){
+  const { data } = await supabase.from('visits').select('*').order('created_at',{ascending:false});
+  const list = qs('#visitList');
+  list.innerHTML = '';
+
+  for(const v of (data||[])){
+    const { data: imgs } = await supabase.from('visit_images').select('*').eq('visit_id', v.id).order('created_at',{ascending:true});
+    const div = document.createElement('div');
+    div.classList.add('card');
+    div.setAttribute('data-vid', v.id);
+    div.innerHTML = `
+      <div class='action-row'>
+        <input class='input v-title' value='${v.title||""}' placeholder='제목'>
+        <input class='input v-sum' value='${v.summary||""}' placeholder='요약'>
+      </div>
+      <textarea class='input v-body' placeholder='본문'>${v.body||""}</textarea>
+      <input class='input v-q' value='${v.map_query||""}' placeholder='지도 검색어'>
+      <div class='action-row'>
+        <button class='btn secondary' data-save='${v.id}'>수정</button>
+        <button class='btn danger' data-del='${v.id}'>방문지 삭제</button>
+      </div>
+      <div class='action-row'>
+        <input type='file' accept='image/*' id='file_${v.id}'>
+        <button class='btn secondary' data-up='${v.id}'>이미지 업로드</button>
+        <a class='btn' href='visit.html?id=${encodeURIComponent(v.id)}' target='_blank'>상세 미리보기</a>
+      </div>
+      <div class='grid' id='imgs_${v.id}'>
+        ${(imgs||[]).map(im => `
+          <div class='card'>
+            <img class='thumb' src='${im.url || supabase.storage.from("images").getPublicUrl(im.path).data.publicUrl}' alt=''>
+            <div class='action-row'>
+              <button class='btn danger' data-imgdel='${im.id}' data-visit='${v.id}'>삭제</button>
+            </div>
+          </div>`).join('')}
+      </div>
+    `;
+    list.appendChild(div);
+
+    // 업로드 버튼 이벤트 단일 등록
+    const fileInput = div.querySelector(`#file_${v.id}`);
+    const uploadBtn = div.querySelector(`[data-up='${v.id}']`);
+    uploadBtn.onclick = async ()=>{
+      fileInput.click();
+    };
+    fileInput.onchange = async ()=>{
+      const file = fileInput.files[0];
+      if(!file) return;
+      const safe = safeFileName(file.name);
+      const name = Date.now() + '_' + safe;
+      const path = 'visits/' + name;
+      const up = await supabase.storage.from('images').upload(path, file);
+      if(up.error) return alert('업로드 실패: ' + up.error.message);
+      const pub = supabase.storage.from('images').getPublicUrl(path).data.publicUrl;
+      await supabase.from('visit_images').insert({ visit_id: v.id, url: pub, path });
+      alert('이미지 업로드 완료');
+      loadVisits(); // ✅ 업로드 후 목록 새로고침
+    };
+  }
+
+  // 삭제/수정 이벤트 (리스트 전체용)
+  list.onclick = async (e)=>{
+    const delVisit = e.target.closest('[data-del]');
+    const saveVisit = e.target.closest('[data-save]');
+    const delImg = e.target.closest('[data-imgdel]');
+
+    if(saveVisit){
+      const id = saveVisit.getAttribute('data-save');
+      const box = saveVisit.closest('[data-vid]');
+      const title = box.querySelector('.v-title').value.trim();
+      const summary = box.querySelector('.v-sum').value.trim();
+      const body = box.querySelector('.v-body').value.trim();
+      const map_query = box.querySelector('.v-q').value.trim();
+      await supabase.from('visits').update({ title, summary, body, map_query }).eq('id', id);
+      alert('수정되었습니다.');
+    }
+
+    if(delVisit){
+      const id = delVisit.getAttribute('data-del');
+      if(confirm('방문지를 삭제하시겠습니까?')){
+        await supabase.from('visits').delete().eq('id', id);
+        loadVisits();
+      }
+    }
+
+    if(delImg){
+      const iid = delImg.getAttribute('data-imgdel');
+      if(confirm('이미지를 삭제하시겠습니까?')){
+        await supabase.from('visit_images').delete().eq('id', iid);
+        loadVisits();
+      }
+    }
+  };
+}
+
+qs('#btnNewVisit').addEventListener('click', async ()=>{
+  const ins = await supabase.from('visits').insert({ title:'제목', summary:'요약', body:'본문', map_query:'' }).select();
+  if(ins.error) return alert(ins.error.message);
+  loadVisits();
+});
+
+// --- 설문 (관리자 결과 포함) ---
+async function loadPolls(){
+  const { data } = await supabase.from('polls').select('*').order('created_at',{ascending:false});
+  const box = qs('#pollList'); box.innerHTML = '';
+  for(const p of (data||[])){
+    const { data: opts } = await supabase.from('poll_options').select('*').eq('poll_id', p.id).order('id',{ascending:true});
+    const { data: resps } = await supabase.from('poll_responses').select('option_id').eq('poll_id', p.id);
+    const counts={}; (resps||[]).forEach(r=>{ counts[r.option_id]=(counts[r.option_id]||0)+1; });
+    const total = (resps||[]).length;
+    const rows = (opts||[]).map((o,i)=>{
+      const c=counts[o.id]||0;
+      const label=o.option_text||o.label||'';
+      const pct= total? Math.round(c*100/total):0;
+      return `<tr><td>${i+1}. ${label}</td><td style='text-align:right'>${c}표</td><td style='width:120px'><div style="background:#ecfbf8;height:8px;border-radius:6px;overflow:hidden"><div style="height:8px;background:#63d3c6;width:${pct}%"></div></div></td><td style='text-align:right'>${pct}%</td></tr>`;
+    }).join('');
+    const el=document.createElement('div'); el.className='card';
+    el.innerHTML = `
+      <h4><input class='input q' value="${p.question||''}"></h4>
+      <div class='small'>
+        마감: <input class='input d' style='width:140px' value='${p.deadline||''}'>
+        | 복수선택:
+        <select class='input m' style='width:120px'>
+          <option value='false' ${p.multiple?'':'selected'}>아니오</option>
+          <option value='true' ${p.multiple?'selected':''}>예</option>
+        </select>
+      </div>
+      <div class='action-row'>
+        <button class='btn secondary' data-savp='${p.id}'>수정</button>
+        <button class='btn danger' data-delp='${p.id}'>설문 삭제</button>
+      </div>
+      <table class='table' style='margin-top:8px'>
+        <thead><tr><th>보기</th><th>득표</th><th colspan='2'>비율</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+    box.appendChild(el);
+
+    el.onclick = async (e)=>{
+      const sv=e.target.closest('[data-savp]');
+      const dl=e.target.closest('[data-delp]');
+
+      if(sv){
+        const q=el.querySelector('.q').value;
+        const m=el.querySelector('.m').value==='true';
+        const d=el.querySelector('.d').value.trim();
+        await supabase.from('polls').update({ question:q, multiple:m, deadline:d||null }).eq('id', sv.getAttribute('data-savp'));
+        alert('수정되었습니다.');
+      }
+
+      if(dl){
+        if(confirm('설문을 삭제하시겠습니까? (옵션/응답 포함)')){
+          const pid = dl.getAttribute('data-delp');
+          const { data, error } = await supabase.rpc('admin_delete_poll', { p_poll: pid });
+          if(error){
+            console.error('삭제 실패:', error.message);
+            alert('삭제 실패: ' + error.message);
+          } else {
+            alert('삭제 완료');
+            loadPolls();
+          }
+        }
+      }
+    };  // ✅ 닫힘
+  }
+}  // ✅ loadPolls 닫힘
+
+// --- 설문 추가 ---
+qs('#btnAddPoll').addEventListener('click', async ()=>{
+  const q = qs('#plQuestion').value.trim();
+  const m = qs('#plMultiple').value === 'true';
+  const d = qs('#plDeadline').value.trim();
+  const opts = qs('#plOpts').value.split(',').map(s => s.trim()).filter(Boolean);
+
+  const ins = await supabase.from('polls')
+    .insert({ question:q, multiple:m, deadline:d||null, is_active:true })
+    .select();
+
+  if(ins.error) {
+    alert('설문 생성 실패: ' + ins.error.message);
+    return;
+  }
+
+  const pid = ins.data?.[0]?.id;
+  if(!pid) return;
+
+  if(opts.length){
+    await supabase.from('poll_options')
+      .insert(opts.map(t => ({ poll_id: pid, option_text: t })));
+  }
+
+  qs('#plQuestion').value = '';
+  qs('#plOpts').value = '';
+  alert('설문이 생성되었습니다.');
+  loadPolls();
+});  // ✅ 닫힘
+
+// --- 초기화 ---
+refreshUI();
+</script>
