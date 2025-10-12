@@ -351,3 +351,35 @@ img{max-width:100%;display:block}
     height: 32px;
   }
 }
+/* ✅ 지도 버튼과 지도 iframe 간 여백 */
+.map-btns {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 14px; /* 버튼 아래 간격 */
+}
+
+/* ✅ 버튼 스타일 (색상 유지) */
+.map-btns a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 34px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  border: 2px solid #dbeafe;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+/* 브랜드별 색상 */
+.map-btns a:nth-child(1){ color:#4285F4; border-color:#4285F4; }
+.map-btns a:nth-child(2){ color:#03C75A; border-color:#03C75A; }
+.map-btns a:nth-child(3){ color:#FEE500; border-color:#FEE500; }
+
+.map-btns a:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
