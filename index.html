@@ -5,6 +5,8 @@
 <header class="header"><div class="header-inner">
   <div class="brand"><div class="title">밤실 부녀 화담숲 여행 모임</div><span class="badge">모바일</span></div>
 </div></header>
+<!-- ✅ 메인 이미지 슬라이드 영역 -->
+<section id="heroFx" class="hero"></section>
 <main class="container">
   <section class="section"><div class="card"><div id="heroFx" class="hero-fixed"></div></div></section>
   <section class="section"><h2>📌 공지사항</h2><div id="annList" class="list"></div></section>
@@ -90,9 +92,9 @@ const googleEmbed = `https://www.google.com/maps?q=${encodeURIComponent(q)}&outp
 qs('#mapBox').innerHTML = `
   <div class="card">
     <div class="action-row map-btns">
-      <a class="map-btn g" href="${urls.g}" target="_blank" title="Google 지도">G</a>
-      <a class="map-btn n" href="${urls.n}" target="_blank" title="Naver 지도">N</a>
-      <a class="map-btn k" href="${urls.k}" target="_blank" title="Kakao 지도">K</a>
+      <a class="map-btn g" href="${urls.g}" target="_blank" title="Google 지도">Google</a>
+      <a class="map-btn n" href="${urls.n}" target="_blank" title="Naver 지도">Naver</a>
+      <a class="map-btn k" href="${urls.k}" target="_blank" title="Kakao 지도">Kakao</a>
     </div>
     <iframe
       src="${embed || googleEmbed}"
