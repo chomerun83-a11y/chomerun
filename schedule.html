@@ -27,32 +27,28 @@
   }
   .schedule-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 0;
+    flex-direction: column;
+    padding: 8px 0;
     border-bottom: 1px dotted #e6efee;
   }
   .schedule-item:last-child {
     border-bottom: none;
   }
-  .time-badge {
-    background: #ecfbf8;
-    color: #0f766c;
-    font-weight: 700;
-    font-size: 14px;
-    border-radius: 999px;
-    padding: 4px 10px;
-    margin-right: 8px;
-    white-space: nowrap;
-  }
-  .activity {
-    flex: 1;
+  .activity-line {
     font-weight: 600;
+    color: #0f172a;
+    font-size: 15px;
   }
-  .place {
-    color: #6b7280;
+  .place-line {
+    color: #64748b;
     font-size: 13px;
-    white-space: nowrap;
+    margin-left: 4px;
+  }
+  .time-line {
+    color: #0f766c;
+    font-weight: 500;
+    font-size: 13px;
+    margin-top: 2px;
   }
 </style>
 </head>
@@ -92,14 +88,14 @@ async function loadSchedule(){
     return;
   }
 
-  // 시간 순 정렬
+  // 시간순 정렬
   const sorted = data.slice().sort((a,b)=>{
     const ta = a.start_time || a.time || '';
     const tb = b.start_time || b.time || '';
     return ta.localeCompare(tb);
   });
 
-  // 시간대별 그룹 (이른 아침, 오전, 오후, 저녁)
+  // 시간대별 그룹화
   const by = {};
   sorted.forEach(r=>{
     const label = bucketLabel(r.start_time || r.time);
@@ -110,15 +106,15 @@ async function loadSchedule(){
   Object.keys(by).forEach(k=>{
     let html = `<h3>${k}</h3><div class="schedule-group">`;
     by[k].forEach(r=>{
-      const time = r.start_time || r.time || '--:--';
+      const start = r.start_time || r.time || '--:--';
       const end = r.end_time ? ` ~ ${r.end_time}` : '';
       const activity = r.activity || '';
       const place = r.place ? `(${r.place})` : '';
+
       html += `
         <div class="schedule-item">
-          <span class="time-badge">${time}${end}</span>
-          <span class="activity">${activity}</span>
-          <span class="place">${place}</span>
+          <div class="activity-line">${activity} <span class="place-line">${place}</span></div>
+          <div class="time-line">${start}${end}</div>
         </div>
       `;
     });
