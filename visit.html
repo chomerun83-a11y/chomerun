@@ -99,7 +99,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
+    width: 70px;
     height: 40px;
     border-radius: 10px;
     font-weight: 700;
@@ -202,9 +202,9 @@ async function load(){
   const query = v.map_query || v.title || '';
   const urls = mapLinks(query);
   qs('#mapBtns').innerHTML = `
-    <a href="${urls.g}" target="_blank" title="Google">G</a>
-    <a href="${urls.n}" target="_blank" title="Naver">N</a>
-    <a href="${urls.k}" target="_blank" title="Kakao">K</a>
+    <a href="${urls.g}" target="_blank" title="Google">Google</a>
+    <a href="${urls.n}" target="_blank" title="Naver">Naver</a>
+    <a href="${urls.k}" target="_blank" title="Kakao">Kakao</a>
   `;
 }
 
