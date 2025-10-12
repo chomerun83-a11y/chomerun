@@ -1,46 +1,214 @@
-<!doctype html><html lang="ko"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>방문지 상세</title>
-<link rel="stylesheet" href="assets/css/style.css"></head><body>
-<header class="header"><div class="header-inner"><div class="brand"><div class="title">방문지 상세</div></div></div></header>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📍 방문지 상세</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+  /* ✅ 기본 구조 */
+  body {
+    background: #f8fafc;
+  }
+  .container {
+    padding-bottom: 80px;
+  }
+
+  /* ✅ 제목 / 요약 / 본문 */
+  .visit-title {
+    font-weight: 800;
+    font-size: 22px;
+    color: #0f172a;
+    margin-bottom: 6px;
+  }
+  .visit-summary {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f766c;
+    margin-bottom: 14px;
+  }
+  .visit-body {
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.8;
+    color: #1e293b;
+    background: #f9fafb;
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 10px;
+    white-space: pre-line;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  /* ✅ 이미지 슬라이드 */
+  .carousel {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    border-radius: 14px;
+    margin-bottom: 12px;
+  }
+  .slides {
+    display: flex;
+    transition: transform 0.6s ease-in-out;
+    width: 100%;
+  }
+  .slide {
+    flex: 0 0 100%;
+  }
+  .slide img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+  }
+  .slide-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.85);
+    border: none;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-weight: bold;
+    color: #0f766c;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  .slide-btn:hover {
+    background: #0f766c;
+    color: #fff;
+  }
+  .prev { left: 10px; }
+  .next { right: 10px; }
+
+  @media (max-width: 600px) {
+    .slide img { height: 240px; }
+    .visit-title { font-size: 20px; }
+    .visit-body { font-size: 16px; padding: 12px; }
+  }
+
+  /* ✅ 지도 버튼 (G/N/K) */
+  #mapBtns {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  #mapBtns a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 16px;
+    border: 2px solid #dbeafe;
+    background: #fff;
+    transition: all 0.2s ease;
+  }
+  #mapBtns a:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+  }
+  #mapBtns a:nth-child(1){ color:#4285F4; border-color:#4285F4; }
+  #mapBtns a:nth-child(2){ color:#03C75A; border-color:#03C75A; }
+  #mapBtns a:nth-child(3){ color:#FEE500; border-color:#FEE500; }
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand"><div class="title">📍 방문지 상세</div></div>
+  </div>
+</header>
+
 <main class="container">
   <section class="section card">
     <div id="titleBox"></div>
     <div id="slideBox" class="section"></div>
-    <div id="bodyBox" class="section small"></div>
+    <div id="bodyBox" class="section"></div>
     <div id="mapBtns" class="action-row"></div>
   </section>
 </main>
-<nav class="navbar"><div class="navbar-inner">
-  <a href="index.html">홈</a><a href="schedule.html">일정</a><a href="visits.html">방문지</a><a href="survey.html">설문</a><a href="admin.html">관리자</a>
-</div></nav>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html">홈</a>
+    <a href="schedule.html">일정</a>
+    <a href="visits.html" class="active">방문지</a>
+    <a href="survey.html">설문</a>
+    <a href="admin.html">관리자</a>
+  </div>
+</nav>
+
 <script type="module">
 import { supabase } from './assets/js/supabase.js';
 import { qs, qsa, mapLinks } from './assets/js/ui.js';
+
 function getParam(name){ const u=new URL(location.href); return u.searchParams.get(name); }
 
 async function load(){
-  const id = getParam('id'); if(!id){ qs('#titleBox').textContent='잘못된 접근'; return; }
+  const id = getParam('id');
+  if(!id){ qs('#titleBox').textContent='잘못된 접근'; return; }
+
   const vres = await supabase.from('visits').select('*').eq('id', id).maybeSingle();
-  const v = vres.data; if(!v){ qs('#titleBox').textContent='방문지 없음'; return; }
-  qs('#titleBox').innerHTML = `<h2 style="margin:0">${v.title||''}</h2><div class="small">${v.summary||''}</div>`;
+  const v = vres.data;
+  if(!v){ qs('#titleBox').textContent='방문지 없음'; return; }
+
+  qs('#titleBox').innerHTML = `
+    <div class="visit-title">${v.title || ''}</div>
+    <div class="visit-summary">${v.summary || ''}</div>
+  `;
+
   const { data: imgs } = await supabase.from('visit_images').select('*').eq('visit_id', id).order('created_at',{ascending:true});
-  const s = imgs||[];
-  const slide = qs('#slideBox');
-  if(!s.length){ slide.innerHTML = '<div class="small">이미지가 없습니다.</div>'; }
-  else{
-    slide.innerHTML = '<div class="hero-fixed" id="carousel"></div>'; const car=qs('#carousel');
-    car.innerHTML = s.map(im=>`<div class="slide"><img src="${im.url || (supabase.storage.from('images').getPublicUrl(im.path).data.publicUrl)}" alt=""></div>`).join('');
-    const items = qsa('.slide', car); let i=0; items.forEach((el,idx)=>el.style.display=idx?'none':'block');
-    setInterval(()=>{ items[i].style.display='none'; i=(i+1)%items.length; items[i].style.display='block'; },2600);
+  const s = imgs || [];
+  const slideBox = qs('#slideBox');
+
+  if(!s.length){
+    slideBox.innerHTML = '<div class="small">이미지가 없습니다.</div>';
+  } else {
+    slideBox.innerHTML = `
+      <div class="carousel">
+        <div class="slides">
+          ${s.map(im=>`<div class="slide"><img src="${im.url || supabase.storage.from('images').getPublicUrl(im.path).data.publicUrl}" alt=""></div>`).join('')}
+        </div>
+        <button class="slide-btn prev">❮</button>
+        <button class="slide-btn next">❯</button>
+      </div>
+    `;
+
+    const slides = qs('.slides');
+    const total = s.length;
+    let index = 0;
+
+    function showSlide(i){
+      index = (i + total) % total;
+      slides.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    qs('.prev').onclick = ()=> showSlide(index - 1);
+    qs('.next').onclick = ()=> showSlide(index + 1);
+
+    // 자동 슬라이드 (4초 간격)
+    setInterval(()=> showSlide(index + 1), 4000);
   }
-  qs('#bodyBox').innerHTML = v.body || '';
+
+  // 본문 내용
+  qs('#bodyBox').innerHTML = `<div class="visit-body">${v.body || ''}</div>`;
+
+  // 지도 버튼
   const query = v.map_query || v.title || '';
   const urls = mapLinks(query);
-  qs('#mapBtns').innerHTML = `<a class="btn secondary" target="_blank" href="${urls.g}">G</a>
-                               <a class="btn secondary" target="_blank" href="${urls.n}">N</a>
-                               <a class="btn secondary" target="_blank" href="${urls.k}">K</a>`;
+  qs('#mapBtns').innerHTML = `
+    <a href="${urls.g}" target="_blank" title="Google">G</a>
+    <a href="${urls.n}" target="_blank" title="Naver">N</a>
+    <a href="${urls.k}" target="_blank" title="Kakao">K</a>
+  `;
 }
+
 load();
 </script>
-</body></html>
+</body>
+</html>
