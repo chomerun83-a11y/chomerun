@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>박진환 ❤️ 서유림 결혼식</title>
+
+<!-- ✅ SNS(카카오톡, 페이스북, 네이버 등) 미리보기 메타태그 -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="박진환 ❤️ 서유림 결혼식">
+<meta property="og:description" content="두 사람이 하나되는 날, 소중한 여러분을 초대합니다.">
+<meta property="og:image" content="https://your-domain.com/images/share_thumb.jpg"> <!-- 🔸 썸네일 이미지 절대경로 -->
+<meta property="og:url" content="https://your-domain.com/index.html">
+
+<!-- ✅ 트위터용(선택사항) -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="박진환 ❤️ 서유림 결혼식">
+<meta name="twitter:description" content="두 사람이 하나되는 날, 소중한 여러분을 초대합니다.">
+<meta name="twitter:image" content="https://your-domain.com/images/share_thumb.jpg">
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 상단 고정 메뉴 -->
+<nav class="navbar">
+  <a href="#" data-popup="mapPopup">예식안내</a>
+  <a href="#" data-popup="galleryPopup">갤러리</a>
+  <a href="#" data-popup="accountPopup">계좌 안내</a>
+</nav>
+
+<!-- 슬라이드 -->
+<section class="hero">
+  <img src="images/s/f1.png" class="active">
+  <img src="images/s/f2.png">
+  <img src="images/s/f3.png">
+  <img src="images/s/f4.png">
+  <img src="images/s/f5.png">
+  <img src="images/s/f6.png">
+  <img src="images/s/f7.png">
+  <img src="images/s/f8.png">
+  <img src="images/s/f9.png">
+  <img src="images/s/f10.png">
+  <img src="images/s/f11.png">
+  <img src="images/s/f12.png">
+  <img src="images/s/f13.png">
+  <div class="slide-btn prev">‹</div>
+  <div class="slide-btn next">›</div>
+</section>
+
+<!-- 🔔 공지사항 -->
+<section class="section notice">
+  <h2>버스 운행 안내 : 11월 08일(토) 장기 ↔ 서울 버스</h2>
+  <p>장기농협 주차장(장척로 418) ※ 출발시간 : 아침 9시</p>
+</section>
+
+<!-- 🔔 계좌안내 -->
+<section class="section notice">
+  <h2>마음전하실 곳</h2>
+  <p> 박종옥 · 김동옥의 아들 박진환</p>
+  <p>💳 신랑 아버님 : 농협 457028-52-022451 (박종옥)
+    <button class="copy-btn" data-copy="457028-52-022451">복사</button></p>
+  <p>💳 신랑 어머님 : 농협 463810-52-020518 (김동옥)
+    <button class="copy-btn" data-copy="463810-52-020518">복사</button></p>
+</section>
+
+<!-- 인사말 -->
+<section class="section">
+  <h2>인사말</h2>
+  <p>서로의 하루에 스며들다 보니<br>계절이 바뀌고 마음이 깊어졌습니다.</p>
+  <p>이제 '우리' 라는 이름으로<br>첫 걸음을 내딛으려 합니다.</p>
+  <p>저희 두 사람의 새로운 시작을 축복해주세요.</p>
+  <p>박종옥 · 김동옥의 아들 신랑 박진환</p>
+  <p>서종철 · 변정온의 딸 신부 서유림</p>
+</section>
+
+<!-- ===== 팝업 영역 ===== -->
+<!-- 오시는 길 팝업 -->
+<div id="mapPopup" class="popup">
+  <div class="popup-content">
+    <span class="close">×</span>
+    <h2>예식안내</h2>
+     <p>하나증권 빌딩 3층 한마음 홀(02-761-2307)</p>
+     <p>2025년 11월 08일 토요일 오후 12시 30분</p>
+    <p id="meetAddr">(불러오는 중...)</p>
+    <div id="mapBox"></div>
+  </div>
+</div>
+
+<!-- 갤러리 팝업 -->
+<div id="galleryPopup" class="popup">
+  <div class="popup-content">
+    <span class="close">×</span>
+    <h2>갤러리</h2>
+    <div class="gallery">
+      <img src="images/g/1.png">
+      <img src="images/g/2.png">
+      <img src="images/g/3.png">
+      <img src="images/g/4.png">
+      <img src="images/g/5.png">
+      <img src="images/g/6.png">
+      <img src="images/g/7.png">
+      <img src="images/g/8.png">
+      <img src="images/g/9.png">
+      <img src="images/g/10.png">
+      <img src="images/g/11.png">
+      <img src="images/g/12.png">
+      <img src="images/g/13.png">
+    </div>
+  </div>
+</div>
+<div id="lightbox" class="lightbox">
+  <span class="lightbox-close">×</span>
+  <img id="lightbox-img" src="">
+</div>
+
+<!-- 계좌 안내 팝업 -->
+<div id="accountPopup" class="popup">
+  <div class="popup-content">
+    <span class="close">×</span>
+    <h2>계좌 안내</h2>
+    <p>💳 신랑 아버님 : 농협 457028-52-022451 (박종옥)
+      <button class="copy-btn" data-copy="457028-52-022451">복사</button></p>
+    <p>💳 신랑 어머님 : 농협 463810-52-020518 (김동옥)
+      <button class="copy-btn" data-copy="463810-52-020518">복사</button></p>
+  </div>
+</div>
+
+<div class="toast" id="toast">복사되었습니다!</div>
+
+<script>
+// ===== 상단 메뉴 클릭 시 팝업 열기 =====
+document.querySelectorAll('.navbar a').forEach(link=>{
+  link.addEventListener('click', e=>{
+    e.preventDefault();
+    const popupId = link.dataset.popup;
+    const popup = document.getElementById(popupId);
+    if(popup) popup.classList.add('show');
+  });
+});
+
+// ===== 팝업 닫기 =====
+document.querySelectorAll('.popup .close').forEach(btn=>{
+  btn.addEventListener('click', ()=>btn.closest('.popup').classList.remove('show'));
+});
+document.querySelectorAll('.popup').forEach(p=>{
+  p.addEventListener('click', e=>{ if(e.target===p) p.classList.remove('show'); });
+});
+
+// ===== 슬라이드 =====
+const slides = document.querySelectorAll('.hero img');
+const prev = document.querySelector('.slide-btn.prev');
+const next = document.querySelector('.slide-btn.next');
+let idx = 0; let timer = null;
+function showSlide(i){ slides.forEach(s => s.classList.remove('active')); slides[i].classList.add('active'); }
+function nextSlide(){ idx = (idx + 1) % slides.length; showSlide(idx); }
+function prevSlide(){ idx = (idx - 1 + slides.length) % slides.length; showSlide(idx); }
+function startAuto(){ timer = setInterval(nextSlide, 4000); }
+function resetTimer(){ clearInterval(timer); startAuto(); }
+next.addEventListener("click", () => { nextSlide(); resetTimer(); });
+prev.addEventListener("click", () => { prevSlide(); resetTimer(); });
+showSlide(idx); startAuto();
+
+// ===== 계좌 복사 버튼 =====
+const toast=document.getElementById('toast');
+document.querySelectorAll('.copy-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    navigator.clipboard.writeText(btn.dataset.copy).then(()=>{
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'),1500);
+    });
+  };
+});
+
+// ===== 오시는 길 지도 자동 표시 =====
+const MEETING_ADDRESS = "서울 영등포구 의사당대로82"; // 주소만 변경하면 지도 자동 갱신
+function mapLinks(q){
+  const encoded = encodeURIComponent(q);
+  return {
+    g: `https://www.google.com/maps/search/?api=1&query=${encoded}`,
+    n: `https://map.naver.com/v5/search/${encoded}`,
+    k: `https://map.kakao.com/?q=${encoded}`,
+  };
+}
+function loadMeeting(){
+  const q = MEETING_ADDRESS.trim();
+  const meetAddr = document.getElementById('meetAddr');
+  const mapBox = document.getElementById('mapBox');
+  meetAddr.textContent = q || '(미설정)';
+  const urls = mapLinks(q);
+  const googleEmbed = `https://www.google.com/maps?q=${encodeURIComponent(q)}&output=embed`;
+  mapBox.innerHTML = `
+    <div class="card">
+      <div class="action-row map-btns">
+        <a class="map-btn g" href="${urls.g}" target="_blank">Google 지도</a>
+        <a class="map-btn n" href="${urls.n}" target="_blank">Naver 지도</a>
+        <a class="map-btn k" href="${urls.k}" target="_blank">Kakao 지도</a>
+      </div>
+      <iframe
+        src="${googleEmbed}"
+        style="width:100%;height:300px;border:0;border-radius:12px"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>`;
+}
+window.addEventListener('DOMContentLoaded', loadMeeting);
+
+// ===== 갤러리 이미지 클릭 시 라이트박스 띄우기 =====
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+const lightboxClose = document.querySelector('.lightbox-close');
+
+document.querySelectorAll('#galleryPopup .gallery img').forEach(img => {
+  img.addEventListener('click', () => {
+    lightboxImg.src = img.src;
+    lightbox.classList.add('show');
+  });
+});
+
+lightboxClose.addEventListener('click', () => {
+  lightbox.classList.remove('show');
+});
+lightbox.addEventListener('click', e => {
+  if (e.target === lightbox) lightbox.classList.remove('show');
+});
+
+</script>
+
+</body>
+</html>
