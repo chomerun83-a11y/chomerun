@@ -277,7 +277,7 @@ html, body {
   background: rgba(0, 0, 0, 0.45);
   color: #fff;
   text-align: center;
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 1.6;
   padding: 12px 16px;
@@ -292,6 +292,7 @@ html, body {
   transform: scale(1.02);
   background: rgba(0, 0, 0, 0.55);
 }
+
 
 
 
