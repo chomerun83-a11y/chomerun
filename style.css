@@ -273,17 +273,25 @@ html, body {
 .hero-caption {
   position: relative;
   max-width: 720px;
-  margin: -40px auto 20px auto; /* 위로 겹치게 약간 들어감 */
-  background: rgba(0, 0, 0, 0.45); /* 투명한 검정 배경 */
+  margin: -40px auto 20px auto;
+  background: rgba(0, 0, 0, 0.45);
   color: #fff;
   text-align: center;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 500;
   line-height: 1.6;
   padding: 12px 16px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,.2);
   backdrop-filter: blur(4px);
+  cursor: pointer; /* 👈 클릭 가능한 손가락 모양 */
+  transition: transform .2s ease, background .2s ease;
 }
+
+.hero-caption:hover {
+  transform: scale(1.02);
+  background: rgba(0, 0, 0, 0.55);
+}
+
 
 
