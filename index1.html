@@ -230,10 +230,16 @@ lightbox.addEventListener('click', e => {
   if (e.target === lightbox) lightbox.classList.remove('show');
 });
 
+  document.getElementById('openMap').addEventListener('click', () => {
+  const mapPopup = document.getElementById('mapPopup');
+  mapPopup.classList.add('show');
+});
+
 </script>
 
 </body>
 </html>
+
 
 
 
