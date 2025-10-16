@@ -270,16 +270,10 @@ html, body {
 }
 
 /* 메인 이미지 하단 투명 박스 + 텍스트 */
-.hero {
-  position: relative; /* 기준이 되어야 함 */
-}
-
 .hero-caption {
-  position: absolute;    /* 절대 위치로 전환 */
-  bottom: 20px;          /* 슬라이드 하단에서 20px 띄움 */
-  left: 50%;             /* 가운데 정렬 */
-  transform: translateX(-50%); /* 수평 중앙 보정 */
-  max-width: 90%;        /* 여백 확보 */
+  position: relative;
+  max-width: 720px;
+  margin: -40px auto 20px auto;
   background: rgba(0, 0, 0, 0.45);
   color: #fff;
   text-align: center;
@@ -290,15 +284,15 @@ html, body {
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,.2);
   backdrop-filter: blur(4px);
-  cursor: pointer;
-  z-index: 10;           /* 이미지 위로 나오게 */
+  cursor: pointer; /* 👈 클릭 가능한 손가락 모양 */
   transition: transform .2s ease, background .2s ease;
 }
 
 .hero-caption:hover {
-  transform: translateX(-50%) scale(1.02); /* 중앙 기준 확대 */
+  transform: scale(1.02);
   background: rgba(0, 0, 0, 0.55);
 }
+
 
 
 
