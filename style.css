@@ -312,7 +312,7 @@ html, body {
 /* 인사말 전체 영역 */
 .greeting {
   background-color: #fff;
-  padding: 60px 0 70px; /* 위아래 균형 맞춤 */
+  padding: 50px 0 60px; /* 위아래 균형 맞춤 */
   border-top: 1px solid #f3e3db; /* 💡 위 구분선 살짝 띄운 느낌 */
   margin-top: 40px; /* 💡 마음전하는곳과 약간 간격 */
 }
@@ -338,6 +338,7 @@ html, body {
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.06);
 }
+
 
 
 
