@@ -309,20 +309,37 @@ html, body {
 }
 
 /* 이미지 중앙 정렬 및 여백 제거 */
+/* 인사말 전체 영역 */
+.greeting {
+  background-color: #fff;
+  padding: 60px 0 70px; /* 위아래 균형 맞춤 */
+  border-top: 1px solid #f3e3db; /* 💡 위 구분선 살짝 띄운 느낌 */
+  margin-top: 40px; /* 💡 마음전하는곳과 약간 간격 */
+}
+
+/* 인사말 제목 */
+.greeting-title {
+  text-align: left;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #d38c7c;
+  margin: 0 0 20px 24px; /* 💡 좌측 여백 살짝 (너무 붙지 않게) */
+}
+
+/* 인사말 이미지 */
 .greeting-inner {
   text-align: center;
-  margin: 0;
 }
 
 .greeting-image {
-  max-width: 100%;
+  max-width: 95%;   /* 💡 좌우 살짝 여백 주기 */
   height: auto;
   display: inline-block;
-  vertical-align: middle;
-  margin: 0 auto;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  border-radius: 8px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
 }
+
+
 
 
 
