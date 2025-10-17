@@ -293,23 +293,37 @@ html, body {
   background: rgba(0, 0, 0, 0.55);
 }
 
+/* 인사말 영역 */
 .greeting {
-  background-color: #fff;          /* 깔끔한 흰색 배경 */
-  text-align: center;
-  padding: 80px 20px;              /* 상하 여백 넉넉히 */
+  background-color: #fff;
+  padding: 40px 0; /* ✅ 상하 여백 줄이기 */
 }
 
+/* 인사말 제목 왼쪽 정렬 */
+.greeting-title {
+  text-align: left;       /* ✅ 왼쪽 정렬 */
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #b67c5a;         /* 포인트 컬러 */
+  margin: 0 0 16px 16px;  /* 왼쪽 여백 살짝 */
+}
+
+/* 이미지 중앙 정렬 및 여백 제거 */
 .greeting-inner {
-  max-width: 720px;
-  margin: 0 auto;
+  text-align: center;
+  margin: 0;
 }
 
 .greeting-image {
-  max-width: 100%;                 /* 반응형 크기 조정 */
+  max-width: 100%;
   height: auto;
-  border-radius: 12px;             /* 살짝 둥근 모서리 (선택) */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* 은은한 그림자 (선택) */
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 8px;
 }
+
 
 
 
