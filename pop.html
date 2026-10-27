@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모의 해킹메일 훈련 안내</title>
+<style>
+:root{font-family:'Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;color:#182b46;background:#f3f6fb}*{box-sizing:border-box}body{margin:0}.shell{max-width:760px;margin:7vh auto;padding:0 20px}.panel{background:white;border:1px solid #dce4ef;border-radius:15px;padding:32px;box-shadow:0 12px 34px #0d264015}.tag{font-size:13px;color:#1b619e;font-weight:700;letter-spacing:.04em}.panel h1{font-size:26px;margin:12px 0}.panel p{line-height:1.85;color:#485a6e}.preview{border:1px solid #cbd6e4;border-radius:10px;background:linear-gradient(125deg,#f7fbff,#e7f2fe);padding:32px 26px;cursor:pointer;text-align:left;width:100%;font:inherit;display:block;margin-top:22px}.preview b{display:block;font-size:21px;color:#103965;margin-bottom:10px}.preview span{color:#3d5b78;font-size:15px}.hint{font-size:13px}.overlay{position:fixed;inset:0;background:rgba(12,30,54,.6);display:none;justify-content:center;align-items:center;padding:18px;z-index:10}.overlay.open{display:flex}.dialog{background:white;max-width:540px;width:100%;border-radius:16px;box-shadow:0 25px 70px #05122055;padding:30px;outline:none}.signal{color:#1a5da4;font-size:13px;font-weight:800}.dialog h2{font-size:25px;margin:12px 0}.dialog p{line-height:1.7;color:#405165}.advice{background:#f0f5fb;border-left:4px solid #1b61a5;padding:15px 18px;border-radius:7px;line-height:1.85}.actions{display:flex;justify-content:flex-end;margin-top:22px}.close{background:#135caa;color:white;border:0;border-radius:9px;padding:13px 24px;font-size:16px;font-weight:700;cursor:pointer}.close:focus,.preview:focus{outline:3px solid #79b7ff;outline-offset:3px}@media(max-width:600px){.panel{padding:22px}.dialog{padding:23px}.panel h1{font-size:22px}}
+</style>
+</head>
+<body>
+<main class="shell">
+<section class="panel">
+<div class="tag">SECURITY AWARENESS · 내부 교육 예시</div>
+<h1>모의 해킹메일 대응 안내</h1>
+<p>훈련 메일에 포함된 링크로 이동한 상황을 가정한 교육용 페이지입니다</p>
+<button type="button" class="preview" id="openGuide" aria-haspopup="dialog"><b>안내문 확인하기</b><span>누르면 의심메일 신고 안내 팝업이 표시됩니다</span></button>
+<p class="hint">본 페이지는 어떤 계정정보나 인증정보도 입력받지 않습니다</p>
+</section>
+</main>
+<div class="overlay" id="overlay" aria-hidden="true">
+<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle" tabindex="-1" id="dialog">
+<div class="signal">정보보안 인식 제고 훈련</div>
+<h2 id="dialogTitle">모의 해킹메일입니다</h2>
+<p>방금 확인한 안내는 실제 개인정보 유출이나 인증서 점검 요청이 아닌 모의훈련입니다</p>
+<div class="advice"><strong>의심메일 발견 시 행동요령</strong><div>① 발신자 주소와 링크 주소 확인</div><div>② 첨부파일 실행 및 개인정보 입력 금지</div><div>③ 소속기관 정보보안 담당자 또는 지정된 신고창구에 신고</div></div>
+<p>이미 링크를 눌렀더라도 추가 정보를 입력하지 않고 신고하면 됩니다</p>
+<div class="actions"><button type="button" class="close" id="closeGuide">확인</button></div>
+</div></div>
+<script>
+const overlay=document.getElementById('overlay');const dialog=document.getElementById('dialog');const opener=document.getElementById('openGuide');const closer=document.getElementById('closeGuide');
+function show(){overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');dialog.focus()}
+function hide(){overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');opener.focus()}
+opener.addEventListener('click',show);closer.addEventListener('click',hide);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('open'))hide()});overlay.addEventListener('click',e=>{if(e.target===overlay)hide()});
+// 메일에서 연결된 교육용 랜딩 페이지에서는 진입 즉시 안내
+if(new URLSearchParams(location.search).has('show'))show();
+</script>
+</body>
+</html>
